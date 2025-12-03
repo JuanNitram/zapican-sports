@@ -15,6 +15,8 @@ const currentTab = computed(() => {
     const url = page.url;
     if (url === '/dashboard') return 'inicio';
     if (url.startsWith('/jugadores')) return 'jugadores';
+    if (url.startsWith('/contratos')) return 'contratos';
+    if (url.startsWith('/inversiones')) return 'inversiones';
     return 'inicio';
 });
 </script>
@@ -142,6 +144,12 @@ const currentTab = computed(() => {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('players')" :active="$page.url.startsWith('/jugadores')">
                             Jugadores
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('contracts')" :active="$page.url.startsWith('/contratos')">
+                            Contratos
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('investments')" :active="$page.url.startsWith('/inversiones')">
+                            Inversiones
                         </ResponsiveNavLink>
                     </div>
 

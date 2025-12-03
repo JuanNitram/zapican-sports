@@ -2,6 +2,8 @@
 import { Link } from '@inertiajs/vue3';
 import DashboardIcon from '@/Components/Icons/DashboardIcon.vue';
 import UsersIcon from '@/Components/Icons/UsersIcon.vue';
+import OrdersIcon from '@/Components/Icons/OrdersIcon.vue';
+import TasksIcon from '@/Components/Icons/TasksIcon.vue';
 
 defineProps({
     currentTab: {
@@ -40,6 +42,32 @@ defineProps({
                 >
                     <UsersIcon />
                     <span>Jugadores</span>
+                </Link>
+
+                <Link
+                    :href="route('contracts')"
+                    :class="[
+                        'inline-flex items-center gap-3 px-20 py-4 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none',
+                        currentTab === 'contratos'
+                            ? 'border-b-2 border-primary text-gray-900 bg-gray-50'
+                            : 'border-b-2 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 focus:text-gray-800 focus:bg-gray-50',
+                    ]"
+                >
+                    <OrdersIcon />
+                    <span>Contratos</span>
+                </Link>
+
+                <Link
+                    :href="route('investments')"
+                    :class="[
+                        'inline-flex items-center gap-3 px-20 py-4 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none',
+                        currentTab === 'inversiones'
+                            ? 'border-b-2 border-primary text-gray-900 bg-gray-50'
+                            : 'border-b-2 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 focus:text-gray-800 focus:bg-gray-50',
+                    ]"
+                >
+                    <TasksIcon />
+                    <span>Inversiones</span>
                 </Link>
 
                 </div>

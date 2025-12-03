@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         // Create admin user
         User::create([
             'name' => 'Admin User',
-            'email' => 'admin@zapican.com',
+            'email' => 'admin@admin.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         // Create regular user
         User::create([
             'name' => 'Test User',
-            'email' => 'test@zapican.com',
+            'email' => 'test@test.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
@@ -32,10 +32,11 @@ class UserSeeder extends Seeder
         // Create another test user
         User::create([
             'name' => 'John Doe',
-            'email' => 'john@zapican.com',
+            'email' => 'john@john.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
     }
 }
+
 

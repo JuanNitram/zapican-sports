@@ -18,7 +18,18 @@ require __DIR__.'/auth.php';
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Players routes
     Route::get('/jugadores', [PlayerController::class, 'index'])->name('players');
+    Route::get('/jugadores/{id}', [PlayerController::class, 'show'])->name('players.show');
+    
+    // Contracts routes
+    Route::get('/contratos', [\App\Http\Controllers\ContractController::class, 'index'])->name('contracts');
+    Route::get('/contratos/{id}', [\App\Http\Controllers\ContractController::class, 'show'])->name('contracts.show');
+    
+    // Investments routes
+    Route::get('/inversiones', [\App\Http\Controllers\InvestmentController::class, 'index'])->name('investments');
+    Route::get('/inversiones/jugador/{playerId}', [\App\Http\Controllers\InvestmentController::class, 'show'])->name('investments.show');
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

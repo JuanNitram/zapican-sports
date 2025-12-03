@@ -5,7 +5,7 @@ import Badge from '@/Components/Badge.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
-    players: {
+    contracts: {
         type: Array,
         required: true,
     },
@@ -17,14 +17,14 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Jugadores" />
+    <Head title="Contratos" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
-                Gestión de Jugadores
+                Gestión de Contratos
             </h2>
         </template>
 
@@ -35,10 +35,10 @@ defineProps({
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="text-sm font-medium text-gray-500">
-                                Total Jugadores
+                                Total Contratos
                             </div>
                             <div class="mt-2 text-3xl font-bold text-gray-900">
-                                {{ stats.total_players }}
+                                {{ stats.total_contracts }}
                             </div>
                         </div>
                     </div>
@@ -46,10 +46,10 @@ defineProps({
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="text-sm font-medium text-gray-500">
-                                Jugadores Activos
+                                Contratos Activos
                             </div>
                             <div class="mt-2 text-3xl font-bold text-green-600">
-                                {{ stats.active_players }}
+                                {{ stats.active_contracts }}
                             </div>
                         </div>
                     </div>
@@ -57,21 +57,21 @@ defineProps({
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="text-sm font-medium text-gray-500">
-                                Lesionados
-                            </div>
-                            <div class="mt-2 text-3xl font-bold text-red-600">
-                                {{ stats.injured_players }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="text-sm font-medium text-gray-500">
-                                Contratos por Vencer
+                                Por Vencer (30 días)
                             </div>
                             <div class="mt-2 text-3xl font-bold text-yellow-600">
-                                {{ stats.contracts_expiring_soon }}
+                                {{ stats.expiring_soon }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6">
+                            <div class="text-sm font-medium text-gray-500">
+                                Vencidos
+                            </div>
+                            <div class="mt-2 text-3xl font-bold text-red-600">
+                                {{ stats.expired }}
                             </div>
                         </div>
                     </div>
@@ -80,29 +80,26 @@ defineProps({
                 <Table>
                     <template #title>
                         <h3 class="text-lg font-medium text-gray-900">
-                            Lista de Jugadores
+                            Lista de Contratos
                         </h3>
                     </template>
 
                     <template #header>
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Nombre
+                                Jugador
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Posición
+                                Club
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Equipo
+                                Fecha Inicio
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Edad
+                                Fecha Vencimiento
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Contrato
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Inversión Total
+                                Salario
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Estado
@@ -114,45 +111,51 @@ defineProps({
                     </template>
 
                     <tr
-                        v-for="player in players"
-                        :key="player.id"
+                        v-for="contract in contracts"
+                        :key="contract.id"
                         class="hover:bg-gray-50"
                     >
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ player.name }}
+                            {{ contract.player_name }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ player.position }}
+                            {{ contract.club }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ player.team }}
+                            {{ contract.start_date }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ player.age }} años
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <Badge
-                                :variant="player.contract_status === 'activo' ? 'success' : 'danger'"
+                            {{ contract.end_date }}
+                            <div
+                                v-if="contract.days_until_expiry !== null"
+                                :class="[
+                                    'text-xs mt-1',
+                                    contract.days_until_expiry < 0
+                                        ? 'text-red-600 font-semibold'
+                                        : contract.days_until_expiry <= 30
+                                        ? 'text-yellow-600 font-semibold'
+                                        : 'text-gray-500',
+                                ]"
                             >
-                                {{ player.contract_status }}
-                            </Badge>
-                            <div class="text-xs text-gray-500 mt-1">
-                                Vence: {{ player.contract_expires }}
+                                {{ contract.days_until_expiry < 0 
+                                    ? `Vencido hace ${Math.abs(contract.days_until_expiry)} días`
+                                    : `${contract.days_until_expiry} días restantes`
+                                }}
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${{ player.total_investment.toLocaleString() }}
+                            ${{ contract.salary.toLocaleString() }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             <Badge
-                                :variant="player.status === 'activo' ? 'success' : 'danger'"
+                                :variant="contract.status === 'activo' ? 'success' : 'danger'"
                             >
-                                {{ player.status }}
+                                {{ contract.status }}
                             </Badge>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <Link
-                                :href="route('players.show', player.id)"
+                                :href="route('contracts.show', contract.id)"
                                 class="text-primary hover:text-gray-900"
                             >
                                 Ver Detalles
@@ -164,5 +167,4 @@ defineProps({
         </div>
     </AuthenticatedLayout>
 </template>
-
 
