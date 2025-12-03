@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Public routes
-Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
 
 // Auth routes
 require __DIR__.'/auth.php';
