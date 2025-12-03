@@ -1,28 +1,17 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import TabNavigation from '@/Components/Tabs/TabNavigation.vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
-
-const page = usePage();
-const currentTab = computed(() => {
-    const url = page.url;
-    if (url === '/dashboard') return 'inicio';
-    if (url.startsWith('/jugadores')) return 'jugadores';
-    return 'inicio';
-});
 </script>
 
 <template>
     <div>
         <div class="min-h-screen bg-gray-100">
-            <!-- Navigation bar -->
             <nav
                 class="border-b border-gray-100 bg-white"
             >
@@ -33,7 +22,10 @@ const currentTab = computed(() => {
                             <!-- Logo -->
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
-                                    <p class="text-2xl font-bold text-primary">Zapican Sports</p>
+                                    <!-- <ApplicationLogo
+                                        class="block h-9 w-auto fill-current text-gray-800"
+                                    /> -->
+                                    <p class="text-2xl font-bold">SIGT</p>
                                 </Link>
                             </div>
                         </div>
@@ -71,6 +63,11 @@ const currentTab = computed(() => {
                                             :href="route('profile.edit')"
                                         >
                                             Profile
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('settings')"
+                                        >
+                                            Configuración
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('logout')"
@@ -138,10 +135,19 @@ const currentTab = computed(() => {
                     <!-- Navigation Links -->
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink :href="route('dashboard')" :active="$page.url === '/dashboard'">
-                            Inicio
+                            Panel
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('players')" :active="$page.url.startsWith('/jugadores')">
-                            Jugadores
+                        <ResponsiveNavLink :href="route('users')" :active="$page.url.startsWith('/users')">
+                            Usuarios
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('tasks')" :active="$page.url.startsWith('/tasks')">
+                            Tareas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('buildings')" :active="$page.url.startsWith('/buildings')">
+                            Edificios
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('devices')" :active="$page.url.startsWith('/devices')">
+                            Dispositivos
                         </ResponsiveNavLink>
                     </div>
 
@@ -156,13 +162,16 @@ const currentTab = computed(() => {
                                 {{ $page.props.auth.user.name }}
                             </div>
                             <div class="text-sm font-medium text-gray-500">
-                                {{ $page.props.auth.user.email }}
+                                @{{ $page.props.auth.user.username }}
                             </div>
                         </div>
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')">
                                 Profile
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('settings')">
+                                Configuración
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 :href="route('logout')"
@@ -176,9 +185,6 @@ const currentTab = computed(() => {
                 </div>
             </nav>
 
-            <!-- Tab Navigation -->
-            <TabNavigation :currentTab="currentTab" />
-
             <!-- Page Content -->
             <main>
                 <slot />
@@ -186,3 +192,4 @@ const currentTab = computed(() => {
         </div>
     </div>
 </template>
+
